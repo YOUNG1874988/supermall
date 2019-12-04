@@ -1,9 +1,10 @@
 <template>
 <div class="goods-item" @click="itemClick">
-  <img :src="goodsItem.img" alt="">
+  <img :src="goodsItem.show.img" alt="">
   <div class="goods-info">
     <p>{{goodsItem.title}}</p>
     <span class="price">{{goodsItem.price}}</span>
+    <span class="collect">{{goodsItem.cfav}}</span>
   </div>
 </div>
 </template>
@@ -22,8 +23,15 @@
         methods:{
           itemClick(){
             console.log('go to the detail page of the good!!')
-              //+后面的为各个商品对应的独有的ID，和router/index.js里面的路由配置中的冒号后面的id对应
-              this.$router.push('/detail'+'yangjun')
+            console.log(this.goodsItem)
+              //使用query方式路由组件
+              this.$router.push({
+                //这里的path路径必须和目标组件的path一致
+                path:'/detail/',
+                //这里的id和router/index.js里面的路由配置中的冒号后面的id对应
+                query:{id:this.goodsItem.iid}
+              //  这样到时候id会展示到url中
+              })
           }
         }
     }
@@ -34,7 +42,7 @@
   padding-bottom:40px;
   position:relative;
   width: 48%;
-  margin-left: 5px;
+  margin-left: 4px;
 }
   .goods img{
     width: 100%;

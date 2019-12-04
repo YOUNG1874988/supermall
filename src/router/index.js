@@ -33,7 +33,7 @@ const Detail = () =>
             component: Profile
         },
       {
-        path:'/detail:id',
+        path:'/detail/',
         component:Detail
       }
     ]

@@ -52,27 +52,22 @@ import Scroll from "components/common/scroll/Scroll";
 export default {
   data() {
     return {
-      
-      // 存储加载的数据
-    //   list: [],
-    //   // 是否加载完全部数据
-    //   allLoaded: false,
       banners: [],
       recommends: [],
       titles: [],
       //titles下的商品数据
       goods: {
-        0: { page: 0, data: [] },
-        1: {
-          page: 0,
-          data: []
+        'pop': { page: 1, list: [] },
+        'new': {
+          page: 1,
+          list: []
         },
-        2: {
-          page: 0,
-          data: []
+        'sell': {
+          page: 1,
+          list: []
         }
       },
-      currentType: 0,
+      currentType:'pop',
       tabOffsetTop:0
 
     };
@@ -93,9 +88,9 @@ export default {
     this.getHomeMultidata2();
 
     //  2.请求3个titles下的商品数据
-    this.getHomeGoods(0);
-    this.getHomeGoods(1);
-    this.getHomeGoods(2);
+    this.getHomeGoods('pop');
+    this.getHomeGoods('new');
+    this.getHomeGoods('sell');
   },
   // destory(){
   //   console.log('the home page has been destroyed!!')
@@ -108,7 +103,7 @@ export default {
   computed: {
     //
     showGoods() {
-      return this.goods[this.currentType].data;
+      return this.goods[this.currentType].list;
     }
   },
   methods: {
@@ -116,7 +111,7 @@ export default {
     swiperImgLoaded(){
       console.log(this.$refs.tabControl.$el.offsetTop)
       this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
-    }, 
+    },
     //  上拉时调用该方法
     // loadBottom() {
     //   this.$refs.loadmore.onBottomLoaded();
@@ -138,20 +133,20 @@ export default {
     itemClick(index) {
       switch (index) {
         case 0:
-          this.currentType = 0;
+          this.currentType = 'pop';
           break;
         case 1:
-          this.currentType = 1;
+          this.currentType = 'new';
           break;
         case 2:
-          this.currentType = 2;
+          this.currentType = 'sell';
           break;
       }
     },
     /* 数据请求函数  */
     getHomeMultidata2() {
       getHomeMultidata().then(res => {
-        console.log(res);
+        // console.log(res);
         this.banners = res.data.banner.list;
         this.recommends = res.data.recommend.list;
       });
@@ -162,9 +157,8 @@ export default {
       const page = this.goods[type].page + 1;
       //对应created()中的3次调用
       getHomeGoods(type, page).then(res => {
-        console.log(res);
         //将请求到的数据推到该组件对应类型的goods中
-        this.goods[type].data.push(...res.data.data);
+        this.goods[type].list.push(...res.data.data.list);
         //将page+1，下次调用该方法时就是加载下一页了
         this.goods[type].page += 1;
       });
@@ -197,8 +191,6 @@ export default {
 
 .content {
   overflow-y: auto;
-overflow: scroll;
-height: 500px;
   /*这里的content滚动盒子使用绝对定位，是相对于整个app组件进行定位的;
     所以要给app组件的根元素设置为相对定位，距离顶部44px,距离底部49px才是正确的*/
 
@@ -206,7 +198,7 @@ height: 500px;
     ，content才能正常显示，故当前其祖先元素没有设置相对定位*/
   position: absolute;
   top: 48px;
-  bottom: 49px;
+  bottom: 50px;
   left: 0;
   right: 0;
   /*height: calc(100% - 500px);*/
