@@ -28,6 +28,19 @@ export function  getGoodsDetail(iid) {
  })
 }
 
+//由于请求到的数据是分散的，故需要为商品详细信息创建类，方便拿取
+export class Goods{
+  constructor(itemInfo,columns,service){
+    this.desc = itemInfo.desc;
+    this.price = itemInfo.price;
+    this.oldprice = itemInfo.oldprice;
+    this.discount = itemInfo.discountDesc;
+    this.columns = columns;
+    this.service = service
+  }
+}
+
+
 //api变更后原商品请求废弃
 /*export function getHomeGoods(type,page){
   return request({

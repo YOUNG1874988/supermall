@@ -9,3 +9,4 @@ export function requestdetail(config){
 
   return instance(config)
 }
+

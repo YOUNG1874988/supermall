@@ -13,7 +13,7 @@
         name: "Scroll",
         data(){
             return{
-                scroll:null
+                scroll:{}
             }
         },
         props:{
@@ -21,10 +21,6 @@
             probeType:{
                 type:Number,
                 default:3
-            },
-            pullUpLoad:{
-              type:Boolean,
-              default:false
             }
 
         },
@@ -39,7 +35,6 @@
                 //2：只监听人类手指触摸的滚动，手指离开后的惯性滚动不监听；
                 //3：监听所有滚动
                 probeType:this.probeType,
-                pullUpLoad:this.pullUpLoad
             })
             //2.监听滚动的位置
             // 由于使用该方法监听滚动位置无效，故无用
