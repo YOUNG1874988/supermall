@@ -22,7 +22,7 @@
         },
         methods:{
           itemClick(){
-            console.log('go to the detail page of the good!!')
+            console.log('goods item been clicked!')
             console.log(this.goodsItem)
               //使用query方式路由组件
               this.$router.push({

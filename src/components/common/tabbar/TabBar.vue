@@ -37,6 +37,6 @@ mounted() {
   right: 0;
   bottom:0;
   box-shadow:0 -4px 5px orange;
-  z-index: 10;
+  z-index: 0;
 }
 </style>

@@ -23,7 +23,7 @@
     display: flex;
     height: 44px;
     line-height: 44px;
-    box-shadow: 0 4px 2px orangered;
+    /*border-bottom: 10px solid orange;*/
   }
   .left,.right{
     width: 60px;

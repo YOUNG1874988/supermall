@@ -38,7 +38,7 @@
             })
             //2.监听滚动的位置
             // 由于使用该方法监听滚动位置无效，故无用
-            console.log(this.scroll)
+            // console.log(this.scroll)
             this.scroll.on('scroll',(position) => {
               console.log('监听正在进行！！')
                 // console.log(this.scroll);
