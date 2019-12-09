@@ -21,42 +21,51 @@
             probeType:{
                 type:Number,
                 default:3
-            }
+            },
+          //设置上拉是否进行加载
+          pullUpLoad: {
+            type: Boolean,
+            default: false
+          }
 
         },
 
         mounted() {
-            //1.创建scroll对象
-            this.scroll = new BScroll(this.$refs.wrapper,{
-                //必须给scroll实例设置该属性，其作用域内 div和span才是可被点击的，否则无法点击！！
-                click:true,
-                //probeType的值决定监听滚动的类型：
-                //0，1：从不监听；
-                //2：只监听人类手指触摸的滚动，手指离开后的惯性滚动不监听；
-                //3：监听所有滚动
-                probeType:this.probeType,
-            })
-            //2.监听滚动的位置
-            // 由于使用该方法监听滚动位置无效，故无用
-            // console.log(this.scroll)
-            this.scroll.on('scroll',(position) => {
-              console.log('监听正在进行！！')
-                // console.log(this.scroll);
-              // this.$emit('scroll',position)
-            })
-            // 3.监听上拉事件,没有效果
-            // this.scroll.on('pullingUp',() => {
-            //   // console.log('上拉加载更多')
-            //   this.$emit('pullUp')
-            // })
+          //该组件挂载完成20ms后初始化该scroll
+          setTimeout(this.__initScroll, 20)
         },
         methods: {
-            //返回到指定的scroll位置
-            // 由于使用better-scroll该方法无效，故废弃改用element-ui中的backtop进行顶部返回
-            // scrollTo(x,y){
-            //      this.scroll.scrollTo(x,y)
-            //       console.log('返回顶部点击成功！！！！')
-            // }
+          __initScroll() {
+            // 1.初始化BScroll对象
+            if (!this.$refs.wrapper) return
+            this.scroll = new BScroll(this.$refs.wrapper, {
+              probeType: this.probeType,
+              click: true,
+              pullUpLoad: this.pullUpLoad
+            })
+
+            // 2.将监听事件回调
+            this.scroll.on('scroll', pos => {
+              console.log('正在监听滚动！！')
+              this.$emit('scroll', pos)
+            })
+
+            // 3.监听上拉到底部
+            this.scroll.on('pullingUp', () => {
+              console.log('上拉加载');
+              this.$emit('pullingUp')
+            })
+          },
+          refresh() {
+            this.scroll && this.scroll.refresh && this.scroll.refresh()
+          },
+          finishPullUp() {
+            this.scroll && this.scroll.finishPullUp && this.scroll.finishPullUp()
+          },
+          scrollTo(x, y, time) {
+            this.scroll && this.scroll.scrollTo && this.scroll.scrollTo(x, y, time)
+          }
+
         }
     }
 </script>

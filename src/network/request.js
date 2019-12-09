@@ -19,7 +19,14 @@ import axios from 'axios'
         })
 }
 */
-
+//创建商品详情页推荐数据请求并导出
+export function requestRecommend(config){
+  const instance = axios.create({
+    baseURL:'http://106.54.54.237:8000/api/v1',
+    timeout:5000
+  })
+  return instance(config)
+}
 
 //*****使用PROMISE函数可以无需添加success和failure参数，会简洁很多
 //该request请求只请求到首页除了goods信息之外的内容

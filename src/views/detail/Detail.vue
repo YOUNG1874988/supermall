@@ -8,21 +8,18 @@
            :class="{active:currentIndex == index}"
            @click="titleClick(index)"
            :key="index"
-           >{{item}}</div>
+           >{{item}}
+      </div>
     </div>
   </nav-bar>
 <!--用scroll 组件包裹以使其可以滚动-->
-  <scroll class="wrapper">
-<!--  详情页轮播图组件-->
-  <detail-swiper :top-images="topImage"/>
-<!--商品详情组件-->
-  <goods-details :good-detail="goodsInfo"
-                 />
-<!--    商品信息组件-->
-    <detail-shop-info
-    :shop="shopInfo"
-    />
-    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus animi architecto, atque culpa error incidunt ipsum maxime, nemo nisi quia sit soluta tenetur, voluptatem. A at aut blanditiis est eum excepturi illum incidunt ipsa itaque officia porro quaerat quasi qui quod, reprehenderit repudiandae sapiente sed tempore, veniam voluptates. Accusantium consequuntur enim, esse, eum impedit ipsa itaque nulla optio praesentium quam, recusandae rerum sequi tempore. A adipisci aliquid beatae culpa ea eaque iusto minima possimus quas quod repellat, reprehenderit saepe voluptatibus! Accusantium animi aperiam architecto at beatae consectetur consequatur distinctio dolorem eaque ex excepturi expedita fugiat harum iste, magnam molestias nesciunt officia perferendis, repellat unde veniam vero vitae. Animi aperiam aspernatur at aut, commodi corporis dignissimos dolore dolorem dolores dolorum ea et excepturi expedita facere fugit, incidunt ipsum labore libero minima necessitatibus nesciunt placeat, praesentium quae quaerat quidem quos ratione recusandae similique sit sunt tempora tenetur totam unde vel veritatis vero voluptas. Accusantium aliquam dicta eum possimus sunt. Consectetur cum, debitis deserunt dolores earum enim, explicabo maiores nihil nisi omnis recusandae repellendus sequi suscipit. Cupiditate, tempore, ut. Eligendi est iste nam quaerat, reprehenderit voluptatibus. A accusamus amet atque aut consequuntur dicta dignissimos, dolore eaque in iste iure, magnam numquam odio officiis quidem quisquam repellat similique tempora. Aut ducimus ea et labore quod ut, voluptatibus! Quae, veniam voluptatibus? Accusamus autem cumque eum quia reiciendis tempore veniam vitae! Consequuntur eaque eius in nihil! Asperiores aspernatur assumenda consequuntur doloribus hic illo, ipsam ipsum minus nesciunt obcaecati pariatur sequi soluta tempora, veritatis voluptatem. Ab assumenda debitis eos et illo ipsa qui repudiandae sapiente, voluptate voluptatum! At blanditiis dolorem ducimus illum maxime odit perspiciatis quam quas reiciendis repellendus. Doloremque ducimus esse excepturi harum itaque labore maxime necessitatibus repellat unde voluptatem! Ab, accusamus aut cum eius enim eos excepturi illo in inventore laborum, nostrum pariatur provident, tempore.</div>
+  <scroll class="wrapper" ref="scroll" @scroll="contentScroll">
+    <detail-swiper :top-images="topImage"/>
+    <goods-details :good-detail="goodsInfo"/>
+    <detail-shop-info :shop="shopInfo"/>
+    <detail-params-info ref="params" :item-params="itemParams"/>
+    <detail-comment-info ref="comment" :comment-info="commentInfo" />
+    <goods-list ref="recommend" :goods="recommends" />
   </scroll>
 <!--  <h2>this good's id is:{{// this.$route.query.id}}</h2>-->
 </div>
@@ -30,16 +27,22 @@
 
 <script>
       import NavBar from 'components/common/navbar/NavBar'
-    //导入商品详情数据请求
-      import {getGoodsDetail,Goods} from 'network/home'
+      //  导入滚动组件
+      import Scroll from 'components/common/scroll/Scroll'
+    //导入商品详情数据请求,详情页推荐数据请求
+      import {getGoodsDetail,Goods,getRecommend} from 'network/home'
     //  导入详情页轮播图组件
       import DetailSwiper from './childComps/DetailSwiper'
     //  导入商品详情组件
       import GoodsDetails from "./childComps/GoodsDetails";
-    //  导入商品信息组件
+    //  导入店铺组件
       import DetailShopInfo from './childComps/DetailShopInfo'
-    //  导入滚动组件
-      import Scroll from 'components/common/scroll/Scroll'
+    //  导入商品参数组件
+      import DetailParamsInfo from "./childComps/DetailParamsInfo";
+    //  导入商品评论信息组件
+      import DetailCommentInfo from "./childComps/DetailCommentInfo";
+    //  导入详情页推荐组件
+      import GoodsList from 'components/content/goods/GoodsList'
     export default {
         name: "Detail",
       components:{
@@ -47,7 +50,10 @@
           DetailSwiper,
           GoodsDetails,
           DetailShopInfo,
-          Scroll
+          Scroll,
+          DetailParamsInfo,
+          DetailCommentInfo,
+          GoodsList
       },
       data(){
           return{
@@ -56,15 +62,33 @@
             iid:null,
             topImages:[],
             goodsInfo:{},
-            shopInfo:{}
+            shopInfo:{},
+            itemParams:{},
+            commentInfo:{},
+            recommends:[],
+            themeToYs:[]
           }
       },
       methods:{
+        contentScroll(pos){
+            console.log(pos);
+          },
         titleClick(index){
           this.currentIndex = index
+          console.log(index);
+          this.$refs.scroll.scrollTo(0,-this.themeToYs[index],1000)
         },
         backClick(){
           this.$router.go(-1)
+        },
+        getOffsetTops(){
+
+          this.themeToYs = []
+          this.themeToYs.push(0)
+          this.themeToYs.push(this.$refs.params.$el.offsetTop)
+          this.themeToYs.push(this.$refs.comment.$el.offsetTop)
+          this.themeToYs.push(this.$refs.recommend.$el.offsetTop)
+          console.log(this.themeToYs);
         }
       },
       computed:{
@@ -72,11 +96,15 @@
              return this.topImages
           }
       },
+      mounted() {
+
+      },
+      updated() {
+         this.getOffsetTops()
+      },
       created() {
           this.iid = this.$route.query.id
           getGoodsDetail(this.iid).then(res => {
-            console.log('good detail infomation:');
-            console.log(res);
             const data = res.data.result
             //1.取出轮播图的数据
             this.topImages = res.data.result.itemInfo.topImages
@@ -88,6 +116,27 @@
             // console.log(this.goodsInfo);
           //  3.取出店铺信息数据
             this.shopInfo = data.shopInfo
+          //  4.取出商品参数信息
+            this.itemParams = data.itemParams
+          //  5.对是否存在评论信息做判断，如果有，则取出；如果没有，则不取出
+            if (data.rate.cRate !== 0){
+              this.commentInfo = data.rate.list[0]
+            }
+          //  获取到数据后在下一帧将各个组件的offsetTop推入themeToYs
+            this.$nextTick(() => {
+              this.themeToYs = []
+              this.themeToYs.push(0)
+              this.themeToYs.push(this.$refs.params.$el.offsetTop)
+              this.themeToYs.push(this.$refs.comment.$el.offsetTop)
+              this.themeToYs.push(this.$refs.recommend.$el.offsetTop)
+              console.log(this.themeToYs);
+            })
+          })
+          //获取推荐数据
+          getRecommend().then(res => {
+            console.log('this is recommend data');
+            console.log(res);
+            this.recommends = res.data.data.list
           })
       }
 

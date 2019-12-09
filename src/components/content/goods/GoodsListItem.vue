@@ -1,6 +1,6 @@
 <template>
 <div class="goods-item" @click="itemClick">
-  <img :src="goodsItem.show.img" alt="">
+  <img :src="showImage" alt="">
   <div class="goods-info">
     <p>{{goodsItem.title}}</p>
     <span class="price">{{goodsItem.price}}</span>
@@ -32,6 +32,12 @@
                 query:{id:this.goodsItem.iid}
               //  这样到时候id会展示到url中
               })
+          }
+        },
+        computed:{
+          //提供2中获取图片的方式，如果前者没有则返回后者
+          showImage(){
+            return this.goodsItem.image || this.goodsItem.show.img
           }
         }
     }

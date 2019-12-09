@@ -1,5 +1,6 @@
 <template>
-  <div class="shop-info">
+<!--  判断要渲染的店铺信息对象是否有值，有值才渲染，没有值不渲染-->
+  <div class="shop-info" v-if="Object.keys(shop).length !== 0">
     <div class="shop-top">
       <img :src="shop.shopLogo" alt="">
       <span class="title">{{shop.name}}</span>
@@ -15,7 +16,7 @@
         <div class="info-goods">
           <div class="goods-count">{{shop.cGoods}}</div>
           <div class="goods-text">全部宝贝</div>
-        </div>}}
+        </div>
       </div>
       <div class="shop-middle-item shop-middle-right">
         <table>
