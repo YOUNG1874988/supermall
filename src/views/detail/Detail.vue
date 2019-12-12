@@ -21,6 +21,14 @@
     <detail-comment-info ref="comment" :comment-info="commentInfo" />
     <goods-list ref="recommend" :goods="recommends" />
   </scroll>
+  <detail-bottom-bar @addToCart="addToCart" />
+
+  <!-- 使用element-ui的已封装组件el-backtop定义返回顶部按钮 -->
+  <el-backtop target=".wrapper" :bottom="70" :right="20">
+    <div class="back_top">
+      <img src="~assets/img/common/top.png" alt />
+    </div>
+  </el-backtop>
 <!--  <h2>this good's id is:{{// this.$route.query.id}}</h2>-->
 </div>
 </template>
@@ -43,6 +51,7 @@
       import DetailCommentInfo from "./childComps/DetailCommentInfo";
     //  导入详情页推荐组件
       import GoodsList from 'components/content/goods/GoodsList'
+      import DetailBottomBar from "./childComps/DetailBottomBar";
     export default {
         name: "Detail",
       components:{
@@ -53,25 +62,52 @@
           Scroll,
           DetailParamsInfo,
           DetailCommentInfo,
-          GoodsList
+          GoodsList,
+          DetailBottomBar
       },
       data(){
           return{
             titles:['商品','参数','评论','推荐'],
             currentIndex:0,
-            iid:null,
+            iid:'',
             topImages:[],
             goodsInfo:{},
             shopInfo:{},
             itemParams:{},
             commentInfo:{},
             recommends:[],
-            themeToYs:[]
+            themeToYs:[],
+            price:null
           }
       },
       methods:{
+          addToCart(){
+            console.log('hello Japan');
+            //1.获取到该产品的信息
+            const obj = {}
+            obj.iid = this.iid
+            obj.desc = this.goodsInfo.desc
+            obj.img = this.topImages[0]
+            obj.price = this.price
+          //2.将产品信息放到购物车中
+            this.$store.commit('addCart',obj)
+          },
         contentScroll(pos){
-            console.log(pos);
+          const positionY = -pos.y
+          for(let i in this.themeToYs){
+            //将监听到的位置y坐标与4个主题的offsettop值进行比较，看处在哪个主题的y坐标区间内；
+            //如果该位置处在某一个位置的坐标区间，就打印该主题的下标值；
+            //由于点击主题按钮监听到的位置通常是被点击按钮的最顶部开始位置，所以只有一个值，故打印一个
+            // if (positionY > this.themeToYs[i] && positionY < this.themeToYs[i+1]){
+            //   console.log(i);
+            // }
+            if (this.currentIndex !== i && ((i < length -1 && positionY >= this.themeToYs[i] &&
+             positionY < this.themeToYs[i+1]) || (i === length - 1 && positionY >= this.themeToYs[i])) ){
+              this.currentIndex = i;
+              console.log(i);
+
+            }
+          }
           },
         titleClick(index){
           this.currentIndex = index
@@ -105,15 +141,18 @@
       created() {
           this.iid = this.$route.query.id
           getGoodsDetail(this.iid).then(res => {
+            console.log('the detail result is :');
+            console.log(res);
             const data = res.data.result
+            this.price = data.itemInfo.lowPrice
             //1.取出轮播图的数据
             this.topImages = res.data.result.itemInfo.topImages
           //  2.取出商品详情数据
           //  使用在home.js中创建的Goods类创建商品详情对象,并将其赋值给data中的goodsInfo
           //  注意这里的3个参数与该类创建时定义的3个参数是对应的
             this.goodsInfo = new Goods(data.itemInfo,data.columns,data.shopInfo.services)
-            // console.log('good detail');
-            // console.log(this.goodsInfo);
+            console.log('good detail');
+            console.log(this.goodsInfo);
           //  3.取出店铺信息数据
             this.shopInfo = data.shopInfo
           //  4.取出商品参数信息
@@ -171,5 +210,19 @@
   }
   .active{
     color:deeppink;
+  }
+
+  .back_top {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    background-color: green;
+    border-radius: 100%;
+    z-index: 20;
+  }
+  .back_top img {
+    width: 50px;
+    margin-left: -5px;
+    margin-top: -3px;
   }
 </style>
