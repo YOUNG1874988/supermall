@@ -30,6 +30,7 @@
     </div>
   </el-backtop>
 <!--  <h2>this good's id is:{{// this.$route.query.id}}</h2>-->
+<!--  <toast :message="东京我来了" />-->
 </div>
 </template>
 
@@ -52,6 +53,7 @@
     //  导入详情页推荐组件
       import GoodsList from 'components/content/goods/GoodsList'
       import DetailBottomBar from "./childComps/DetailBottomBar";
+      import Toast from 'components/common/toast/Toast'
     export default {
         name: "Detail",
       components:{
@@ -63,7 +65,8 @@
           DetailParamsInfo,
           DetailCommentInfo,
           GoodsList,
-          DetailBottomBar
+          DetailBottomBar,
+          Toast
       },
       data(){
           return{
@@ -82,7 +85,7 @@
       },
       methods:{
           addToCart(){
-            console.log('hello Japan');
+            // console.log('hello Japan');
             //1.获取到该产品的信息
             const obj = {}
             obj.iid = this.iid
@@ -104,14 +107,14 @@
             if (this.currentIndex !== i && ((i < length -1 && positionY >= this.themeToYs[i] &&
              positionY < this.themeToYs[i+1]) || (i === length - 1 && positionY >= this.themeToYs[i])) ){
               this.currentIndex = i;
-              console.log(i);
+              // console.log(i);
 
             }
           }
           },
         titleClick(index){
           this.currentIndex = index
-          console.log(index);
+          // console.log(index);
           this.$refs.scroll.scrollTo(0,-this.themeToYs[index],1000)
         },
         backClick(){
@@ -124,7 +127,7 @@
           this.themeToYs.push(this.$refs.params.$el.offsetTop)
           this.themeToYs.push(this.$refs.comment.$el.offsetTop)
           this.themeToYs.push(this.$refs.recommend.$el.offsetTop)
-          console.log(this.themeToYs);
+          // console.log(this.themeToYs);
         }
       },
       computed:{
@@ -141,8 +144,8 @@
       created() {
           this.iid = this.$route.query.id
           getGoodsDetail(this.iid).then(res => {
-            console.log('the detail result is :');
-            console.log(res);
+            // console.log('the detail result is :');
+            // console.log(res);
             const data = res.data.result
             this.price = data.itemInfo.lowPrice
             //1.取出轮播图的数据
@@ -151,8 +154,8 @@
           //  使用在home.js中创建的Goods类创建商品详情对象,并将其赋值给data中的goodsInfo
           //  注意这里的3个参数与该类创建时定义的3个参数是对应的
             this.goodsInfo = new Goods(data.itemInfo,data.columns,data.shopInfo.services)
-            console.log('good detail');
-            console.log(this.goodsInfo);
+            // console.log('good detail');
+            // console.log(this.goodsInfo);
           //  3.取出店铺信息数据
             this.shopInfo = data.shopInfo
           //  4.取出商品参数信息
@@ -162,19 +165,19 @@
               this.commentInfo = data.rate.list[0]
             }
           //  获取到数据后在下一帧将各个组件的offsetTop推入themeToYs
-            this.$nextTick(() => {
-              this.themeToYs = []
-              this.themeToYs.push(0)
-              this.themeToYs.push(this.$refs.params.$el.offsetTop)
-              this.themeToYs.push(this.$refs.comment.$el.offsetTop)
-              this.themeToYs.push(this.$refs.recommend.$el.offsetTop)
-              console.log(this.themeToYs);
-            })
+          //   this.$nextTick(() => {
+          //     this.themeToYs = []
+          //     this.themeToYs.push(0)
+          //     this.themeToYs.push(this.$refs.params.$el.offsetTop)
+          //     this.themeToYs.push(this.$refs.comment.$el.offsetTop)
+          //     this.themeToYs.push(this.$refs.recommend.$el.offsetTop)
+          //     // console.log(this.themeToYs);
+          //   })
           })
           //获取推荐数据
           getRecommend().then(res => {
-            console.log('this is recommend data');
-            console.log(res);
+            // console.log('this is recommend data');
+            // console.log(res);
             this.recommends = res.data.data.list
           })
       }

@@ -97,7 +97,7 @@ export default {
   // },
   mounted() {
     // this.getlist();
-   console.log(this.$refs.tabControl.$el.offsetTop)
+   // console.log(this.$refs.tabControl.$el.offsetTop)
   },
   //展示当前类型的商品数据
   computed: {
@@ -109,7 +109,7 @@ export default {
   methods: {
     /*响应式函数*/
     swiperImgLoaded(){
-      console.log(this.$refs.tabControl.$el.offsetTop)
+      // console.log(this.$refs.tabControl.$el.offsetTop)
       this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
     },
     //  上拉时调用该方法

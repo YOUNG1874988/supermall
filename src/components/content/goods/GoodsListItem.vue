@@ -22,8 +22,8 @@
         },
         methods:{
           itemClick(){
-            console.log('goods item been clicked!')
-            console.log(this.goodsItem)
+            // console.log('goods item been clicked!')
+            // console.log(this.goodsItem)
               //使用query方式路由组件
               this.$router.push({
                 //这里的path路径必须和目标组件的path一致
