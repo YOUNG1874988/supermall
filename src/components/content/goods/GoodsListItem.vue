@@ -54,7 +54,7 @@
     width: 100%;
     border-radius: 5px;
   }
-  .goods-info{
+  .title{
     font-size: 12px;
     position:absolute;
     bottom:5px;
