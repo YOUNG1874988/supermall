@@ -17,7 +17,7 @@
         <span class="salereturn">{{goodDetail.columns&&goodDetail.service[goodDetail.service.length-1].name}}</span>
       </div>
       <div class="return">
-            <span v-for="index in goodDetail.service&&goodDetail.service.length - 1">
+            <span v-for="index in goodDetail.service&&goodDetail.service.length - 1" :key="index">
                       <img :src="goodDetail.service[index -1].icon" alt="">
 
               <span>{{goodDetail.service[index -1].name}}</span>

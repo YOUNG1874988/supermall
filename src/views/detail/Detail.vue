@@ -66,7 +66,7 @@
           DetailCommentInfo,
           GoodsList,
           DetailBottomBar,
-          Toast
+          // Toast
       },
       data(){
           return{
