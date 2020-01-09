@@ -6,7 +6,8 @@
       <div slot="center">购物街</div>
     </nav-bar>
     <scroll class="content" ref="scroll" :probe-type="3" :pull-up-load="true">
-      <home-swiper :banners="banners" @imgLoaded='swiperImgLoaded' />
+      <new-swiper :banners="banners"></new-swiper>
+      <!-- <home-swiper :banners="banners" @imgLoaded='swiperImgLoaded' /> -->
       <recommend-view :recommends="recommends" />
       <feature-view />
       <tab-control :titles="['流行','新品','热卖']" @itemClick="itemClick" ref="tabControl"/>
@@ -44,7 +45,8 @@ import RecommendView from "./childComps/RecommendView";
 import FeatureView from "./childComps/FeatureView";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
-
+// 导入后面使用swiper创建的轮播图组件
+import NewSwiper from 'components/common/newswiper/NewSwiper'
 //导入滚动插件
 import Scroll from "components/common/scroll/Scroll";
 // 导入mint的上拉加载插件
@@ -74,7 +76,8 @@ export default {
   },
   components: {
     NavBar,
-    HomeSwiper,
+    // HomeSwiper,
+    NewSwiper,
     RecommendView,
     FeatureView,
     TabControl,
@@ -148,6 +151,7 @@ export default {
       getHomeMultidata().then(res => {
         // console.log(res);
         this.banners = res.data.banner.list;
+        console.log(this.banners)
         this.recommends = res.data.recommend.list;
       });
     },
@@ -168,10 +172,10 @@ export default {
 </script>
 <style scoped>
 /* @import url(); 引入css类 */
-#home {
+/* #home { */
   /* padding-top: 44px; */
   /*position: relative;*/
-}
+/* } */
 
 .home-nav {
   background-color: var(--color-tint);

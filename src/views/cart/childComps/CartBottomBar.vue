@@ -63,7 +63,6 @@
             }).reduce((prevalue,item) => {
               return prevalue + item.count
             },0).toFixed(0)
-
         },
         isSelectedAll(){
             const cartList = this.$store.state.cartList;
